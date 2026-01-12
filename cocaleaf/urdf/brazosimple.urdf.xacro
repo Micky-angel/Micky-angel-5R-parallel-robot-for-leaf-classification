@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="brazo_5r_cajas">
+
+  <xacro:property name="l0" value="0.09" /> <xacro:property name="l1" value="0.20" /> <xacro:property name="l2" value="0.20" /> <xacro:property name="width" value="0.04" /> 
+  <xacro:property name="height" value="0.04" />
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.30 ${width} 0.02"/>
+      </geometry>
+      <material name="grey"><color rgba="0.2 0.2 0.2 1"/></material>
+    </visual>
+  </link>
+
+  <xacro:macro name="crear_brazo" params="prefix reflect color_name">
+    
+    <joint name="motor_${prefix}" type="revolute">
+      <parent link="base_link"/>
+      <child link="link1_${prefix}"/>
+      <origin xyz="${reflect * l0} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/> 
+      <limit lower="-3.14" upper="3.14" effort="100" velocity="10"/>
+    </joint>
+
+    <link name="link1_${prefix}">
+      <visual>
+        <origin xyz="${l1/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="${l1} ${width} ${height}"/>
+        </geometry>
+        <material name="${color_name}"/>
+      </visual>
+    </link>
+
+    <joint name="codo_${prefix}" type="revolute">
+      <parent link="link1_${prefix}"/>
+      <child link="link2_${prefix}"/>
+      <origin xyz="${l1} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-3.14" upper="3.14" effort="100" velocity="10"/>
+    </joint>
+
+    <link name="link2_${prefix}">
+      <visual>
+        <origin xyz="${l2/2} 0 0" rpy="0 0 0"/>
+        <geometry>
+           <box size="${l2} ${width} ${height}"/>
+        </geometry>
+        <material name="${color_name}"/>
+      </visual>
+    </link>
+    
+    <joint name="punta_${prefix}_joint" type="fixed">
+        <parent link="link2_${prefix}"/>
+        <child link="punta_${prefix}"/>
+        <origin xyz="${l2} 0 0" rpy="0 0 0"/>
+    </joint>
+    <link name="punta_${prefix}">
+        <visual>
+            <geometry><sphere radius="0.02"/></geometry>
+            <material name="white"><color rgba="1 1 1 1"/></material>
+        </visual>
+    </link>
+
+  </xacro:macro>
+
+  <material name="blue"><color rgba="0 0 0.8 1"/></material>
+  <material name="red"><color rgba="0.8 0 0 1"/></material>
+
+  <xacro:crear_brazo prefix="izq" reflect="-1" color_name="blue"/>
+  <xacro:crear_brazo prefix="der" reflect="1"  color_name="red"/>
+
+</robot>

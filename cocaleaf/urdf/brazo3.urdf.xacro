@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="brazo_5r_final_debug">
+
+  <xacro:property name="l0" value="0.09" />
+  <xacro:property name="l1" value="0.20" />
+  <xacro:property name="l2" value="0.20" />
+  <xacro:property name="mesh_scale" value="0.001 0.001 0.001" />
+
+  <material name="silver_gray">
+    <color rgba="0.75 0.75 0.75 1"/>
+  </material>
+
+  <material name="debug_red">
+    <color rgba="1 0 0 0.8"/> 
+  </material>
+
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.22 0.05 0.02"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <xacro:macro name="crear_brazo" params="prefix reflect color_name mesh_proximal mesh_distal prox_xyz prox_rpy dist_xyz dist_rpy">
+    
+    <joint name="motor_${prefix}" type="revolute">
+      <parent link="base_link"/>
+      <child link="link1_${prefix}"/>
+      <origin xyz="${reflect * l0} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/> 
+      <limit lower="-3.14" upper="3.14" effort="100" velocity="10"/>
+    </joint>
+
+    <link name="link1_${prefix}">
+      <visual>
+        <origin xyz="${prox_xyz}" rpy="${prox_rpy}"/>
+        <geometry>
+          <mesh filename="package://cocaleaf/meshes/${mesh_proximal}" scale="${mesh_scale}"/>
+        </geometry>
+        <material name="${color_name}"/>
+      </visual>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry><cylinder radius="0.002" length="0.3"/></geometry>
+        <material name="debug_red"/>
+      </visual>
+    </link>
+
+    <joint name="codo_${prefix}" type="revolute">
+      <parent link="link1_${prefix}"/>
+      <child link="link2_${prefix}"/>
+      <origin xyz="${l1} 0 0" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-3.14" upper="3.14" effort="100" velocity="10"/>
+    </joint>
+
+    <link name="link2_${prefix}">
+      <visual>
+        <origin xyz="${dist_xyz}" rpy="${dist_rpy}"/>
+        <geometry>
+           <mesh filename="package://cocaleaf/meshes/${mesh_distal}" scale="${mesh_scale}"/>
+        </geometry>
+        <material name="${color_name}"/>
+      </visual>
+
+      <visual>
+         <origin xyz="0 0 0" rpy="0 0 0"/>
+         <geometry><cylinder radius="0.002" length="0.3"/></geometry>
+         <material name="debug_red"/>
+      </visual>
+    </link>
+
+  </xacro:macro>
+
+  <xacro:crear_brazo 
+       prefix="izq" 
+       reflect="-1" 
+       color_name="silver_gray" 
+       mesh_proximal="link1.stl"
+       mesh_distal="link2.stl"
+       prox_xyz="0.21 0.1 -0.03" prox_rpy="0 0 3.14"
+       dist_xyz="0.21 0.1 -0.02" dist_rpy="0 0 3.14" 
+  />
+
+  <xacro:crear_brazo 
+       prefix="der" 
+       reflect="1"  
+       color_name="silver_gray"
+       mesh_proximal="link3.stl"
+       mesh_distal="link4.stl"
+       prox_xyz="0.21 0.1 -0.03" prox_rpy="0 0 3.14"
+       dist_xyz="0.21 -0.1 0.055" dist_rpy="3.14 0 3.14"
+  />
+
+</robot>
