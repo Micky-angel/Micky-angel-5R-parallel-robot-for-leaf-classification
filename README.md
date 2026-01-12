@@ -9,7 +9,7 @@ STEPS FOR CONNECTION AND RUN
 docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:humble serial --dev /dev/ttyACM0 -b 115200
 ```
 # 2. on Laptop or Raspberry pi 5
-1. clone the package, cocaleaf on yout local src directory
+1. Clone the package, cocaleaf on your local src directory
 2. Run the next commands on terminal.
 
 ```bash
