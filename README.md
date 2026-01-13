@@ -17,3 +17,7 @@ colcon build --symlink-install
 source install/setup.bash 
 ros2 launch cocaleaf robot.launch.py
 ```
+#  3. CAD Design.
+```bash
+https://drive.google.com/drive/folders/1_vDUbXiMIU5-rc2W7qZbikIN8O1vwofr?usp=sharing
+```
