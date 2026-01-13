@@ -13,6 +13,7 @@ docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agen
 2. Run the next commands on terminal.
 
 ```bash
+pip3 install ultralytics
 colcon build --symlink-install
 source install/setup.bash 
 ros2 launch cocaleaf robot.launch.py
